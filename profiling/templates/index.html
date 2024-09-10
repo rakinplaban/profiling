@@ -323,5 +323,58 @@ $('#createProfileModal').on('submit', '.profile_delete_form', saveDeleteForm);  
 
 </script>
 
+  <!--Load profile-->
+  <script>
+    $(function() {
+    // Function to get CSRF token from the cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');  // Get the CSRF token from cookies
+
+    // Function to load profile details into the modal
+    let loadProfileDetail = function() {
+        let modal = $('#profileDetailModal');  // Use your modal's ID
+        let detailButton = $(this);  // 'this' refers to the clicked 'tr'
+
+        $.ajax({
+            url: detailButton.attr('data-url'),  // Get the URL from 'data-url' attribute of 'tr'
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);  // Set CSRF token in headers
+            },
+            success: function(data) {
+                if (data.profile_detail) {
+                    modal.find('.modal-content').html(data.profile_detail);  // Insert profile details into modal
+                    modal.modal('show');  // Show the modal
+                } else {
+                    console.error('Profile details not received:', data);
+                }
+            },
+            error: function(xhr, errmsg, err) {
+                console.error('Error loading profile details:', errmsg);
+            }
+        });
+    };
+
+    // Attach event handler to the entire profile list (event delegation)
+    $('#profileList').on('click', 'tr.profile_detail_button', loadProfileDetail);  // Load profile details on row click
+});
+
+  </script>
+
 </body>
 </html>

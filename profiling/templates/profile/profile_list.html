@@ -1,6 +1,14 @@
 {% for data in profile_list %}
-<tr>
-    
+    <div class="modal fade" id="profileDetailModal" tabindex="-1" aria-labelledby="profileDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <!-- Content will be loaded via AJAX here -->
+          </div>
+        </div>
+    </div>
+
+  
+<tr class="profile_detail_button" data-url="{% url 'profile_detail' data.id %}">
     <td>{{ data.name }}</td>
     <td>{{ data.age }}</td>
     <td>{{ data.father_name }}</td>
@@ -8,14 +16,10 @@
     <td><img style="border-radius: 50%;" src="{{ data.photo.url }}" height="30" width="30" alt="Image"></td>
     <td>
         <div class="d-flex">
-            
             <button class="btn btn-sm btn-secondary m-1 edit_profile_button"
             data-url="{% url 'profile_edit' data.id %}">Edit</button>
-    
-        
             <button class="btn btn-sm btn-danger m-1 delete_profile_button"
             data-url="{% url 'profile_delete' data.id %}">Delete</button>
-        
         </div>
     </td>
 </tr>
