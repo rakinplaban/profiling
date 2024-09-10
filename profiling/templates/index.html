@@ -151,83 +151,92 @@ $('#createProfileModal').on('submit', '.profile_create_form', saveForm);
 <!-- Edit form -->
 <script>
   $(function() {
-// Function to get CSRF token from the cookies
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === (name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
+    // Function to get CSRF token from the cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
-  }
-  return cookieValue;
-}
 
-const csrftoken = getCookie('csrftoken');  // Get the CSRF token from cookies
+    const csrftoken = getCookie('csrftoken');  // Get the CSRF token from cookies
 
-// Function to load the edit form into the modal
-let loadEditForm = function() {
-  let modal = $('#createProfileModal');  // Use your modal's ID
-  let editButton = $(this);
+    // Function to load the edit form into the modal
+    let loadEditForm = function() {
+        let modal = $('#createProfileModal');  // Use your modal's ID
+        let editButton = $(this);
 
-  $.ajax({
-    url: editButton.attr('data-url'),
-    type: 'get',
-    dataType: 'json',
-    beforeSend: function(xhr) {
-      xhr.setRequestHeader("X-CSRFToken", csrftoken);  // Set CSRF token in headers
-    },
-    success: function(data) {
-      if (data.edit_form) {
-        modal.find('.modal-content').html(data.edit_form);  // Insert edit form into modal
-        modal.modal('show');  // Show the modal
-      } else {
-        console.error('Edit form not received:', data);
-      }
-    },
-    error: function(xhr, errmsg, err) {
-      console.error('Error loading edit form:', errmsg);
-    }
-  });
-};
+        console.log('Loading edit form from URL:', editButton.attr('data-url'));  // Log URL
 
-// Save form data after editing
-let saveEditForm = function(e) {
-  e.preventDefault();  // Prevent default form submission
-  let modal = $('#createProfileModal');
-  let form = $(this);
+        $.ajax({
+            url: editButton.attr('data-url'),
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);  // Set CSRF token in headers
+            },
+            success: function(data) {
+                console.log('Edit form response:', data);  // Log response data
 
-  $.ajax({
-    url: form.attr('action'),
-    type: form.attr('method'),
-    dataType: 'json',
-    data: form.serialize(),
-    beforeSend: function(xhr) {
-      xhr.setRequestHeader("X-CSRFToken", csrftoken);  // Set CSRF token in headers
-    },
-    success: function(data) {
-      if (data.valid) {
-        modal.modal('hide');  // Hide modal on success
-        $('#profileList tbody').html(data.profile_list);  // Update the item list
-        $('#successMessage').html(data.success);  // Show success message
-      } else {
-        modal.find('.modal-content').html(data.edit_form);  // Reload form with errors
-      }
-    },
-    error: function(xhr, errmsg, err) {
-      console.error('Error during form submission:', errmsg);
-    }
-  });
-};
+                if (data.edit_form) {
+                    modal.find('.modal-content').html(data.edit_form);  // Insert edit form into modal
+                    modal.modal('show');  // Show the modal
+                } else {
+                    console.error('Edit form not received:', data);
+                }
+            },
+            error: function(xhr, errmsg, err) {
+                console.error('Error loading edit form:', errmsg);
+            }
+        });
+    };
 
-// Attach event handlers
-$('#profileList').on('click', '.edit_profile_button', loadEditForm);  // Load edit form on button click
-$('#createProfileModal').on('submit', '.profile_edit_form', saveEditForm);  // Submit edit form
+    // Save form data after editing (with image upload support)
+    let saveEditForm = function(e) {
+        e.preventDefault();  // Prevent default form submission
+        let modal = $('#createProfileModal');
+        let form = $(this);
+
+        // Create a FormData object and include the form data
+        let formData = new FormData(form[0]);  // Pass the form DOM element to FormData
+
+        $.ajax({
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: formData,  // Send FormData which includes file data
+            processData: false,  // Prevent jQuery from processing the data
+            contentType: false,  // Prevent jQuery from setting the content type header
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);  // Set CSRF token in headers
+            },
+            success: function(data) {
+                if (data.valid) {
+                    modal.modal('hide');  // Hide modal on success
+                    $('#profileList tbody').html(data.profile_list);  // Update the item list
+                    $('#successMessage').html(data.success);  // Show success message
+                } else {
+                    modal.find('.modal-content').html(data.edit_form);  // Reload form with errors
+                }
+            },
+            error: function(xhr, errmsg, err) {
+                console.error('Error during form submission:', errmsg);
+            }
+        });
+    };
+
+    // Attach event handlers
+    $('#profileList').on('click', '.edit_profile_button', loadEditForm);  // Load edit form on button click
+    $('#createProfileModal').on('submit', '.profile_edit_form', saveEditForm);  // Submit edit form
 });
+
 
 </script>
 
