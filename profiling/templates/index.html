@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Include Bootstrap JS (with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Include jQuery before your custom scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha384-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -373,7 +377,10 @@ $('#createProfileModal').on('submit', '.profile_delete_form', saveDeleteForm);  
     // Attach event handler to the entire profile list (event delegation)
     $('#profileList').on('click', 'tr.profile_detail_button', loadProfileDetail);  // Load profile details on row click
 });
-
+   // Stop event propagation on edit and delete buttons
+   $('#profileList').on('click', '.edit_profile_button, .delete_profile_button', function(event) {
+        event.stopPropagation();
+    });
   </script>
 
 </body>
