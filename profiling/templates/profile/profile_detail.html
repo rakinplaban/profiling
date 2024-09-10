@@ -4,6 +4,14 @@
 </div>
 <div class="modal-body">
     <dl class="row">
+        <!-- <dt class="col-sm-4"></dt> -->
+        <div class="container">
+            {% if profile.photo %}
+                <img src="{{ profile.photo.url }}" alt="Profile Photo" class="img-fluid" style="border-radius: 50%; width: 100px; height: 100px;">
+            {% else %}
+                No photo available
+            {% endif %}
+        </div>
         <dt class="col-sm-4">Name:</dt>
         <dd class="col-sm-8">{{ profile.name }}</dd>
 
@@ -16,14 +24,14 @@
         <dt class="col-sm-4">Address:</dt>
         <dd class="col-sm-8">{{ profile.address }}</dd>
 
-        <dt class="col-sm-4">Photo:</dt>
+        <!-- <dt class="col-sm-4">Photo:</dt>
         <dd class="col-sm-8">
             {% if profile.photo %}
                 <img src="{{ profile.photo.url }}" alt="Profile Photo" class="img-fluid" style="border-radius: 50%; width: 100px; height: 100px;">
             {% else %}
                 No photo available
             {% endif %}
-        </dd>
+        </dd> -->
     </dl>
 </div>
 <div class="modal-footer">
