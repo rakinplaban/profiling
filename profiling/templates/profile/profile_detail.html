@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="profileDetailModalLabel">Profile Details</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <dl class="row">
+        <dt class="col-sm-4">Name:</dt>
+        <dd class="col-sm-8">{{ profile.name }}</dd>
+
+        <dt class="col-sm-4">Age:</dt>
+        <dd class="col-sm-8">{{ profile.age }}</dd>
+
+        <dt class="col-sm-4">Father's Name:</dt>
+        <dd class="col-sm-8">{{ profile.father_name }}</dd>
+
+        <dt class="col-sm-4">Address:</dt>
+        <dd class="col-sm-8">{{ profile.address }}</dd>
+
+        <dt class="col-sm-4">Photo:</dt>
+        <dd class="col-sm-8">
+            {% if profile.photo %}
+                <img src="{{ profile.photo.url }}" alt="Profile Photo" class="img-fluid" style="border-radius: 50%; width: 100px; height: 100px;">
+            {% else %}
+                No photo available
+            {% endif %}
+        </dd>
+    </dl>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>

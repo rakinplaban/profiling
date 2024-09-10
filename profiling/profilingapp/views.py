@@ -112,3 +112,19 @@ def profile_delete(request, id):
         context = {'profile': profile}
         data['delete_form'] = render_to_string('profile/profile_delete.html', context, request=request)
         return JsonResponse(data)
+    
+
+def profile_detail(request, id):
+    profile = get_object_or_404(Profile, id=id)
+
+    # Prepare the context with the profile details
+    context = {
+        'profile': profile
+    }
+
+    # Render the profile detail template into a string
+    profile_detail_html = render_to_string('profile/profile_detail.html', context, request=request)
+
+    # Return the rendered HTML as part of the JSON response
+    return JsonResponse({'profile_detail': profile_detail_html})
+
